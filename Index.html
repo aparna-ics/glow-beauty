@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Glow Beauty – cart & wishlist (with navigation)</title>
+  <!-- Bootstrap 5 + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Font Awesome 6 (Free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Bootstrap Icons (keeping for other parts) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+  <style>
+    * { 
+      box-sizing: border-box; 
+      margin: 0;
+      padding: 0;
+    }
+    
+    body { 
+      background: #fcf9f7; 
+      padding-top: 70px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* NEW COLOR PALETTE */
+    :root {
+      --primary: #9b6b9b;      /* Muted lavender */
+      --primary-light: #c59bc5; /* Light lavender */
+      --secondary: #e8b4b4;     /* Soft rose */
+      --accent: #f7d1b3;        /* Peach */
+      --dark: #4a4a4a;          /* Charcoal */
+      --light: #fcf9f7;         /* Off-white */
+      --success: #a8d5ba;       /* Mint */
+      --gradient: linear-gradient(135deg, #9b6b9b 0%, #e8b4b4 100%);
+    }
+
+    /* NAVBAR */
+    .navbar {
+      background: white !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      padding: 12px 0;
+    }
+
+    .navbar-brand {
+      font-size: 1.4rem;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    .navbar-brand i {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .navbar-nav .nav-link {
+      color: var(--dark) !important;
+      font-weight: 600;
+      margin: 0 8px;
+      position: relative;
+      transition: all 0.3s;
+      padding: 8px 12px !important;
+    }
+
+    .navbar-nav .nav-link i {
+      color: var(--primary);
+      margin-right: 6px;
+      font-size: 1.1rem;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: var(--primary) !important;
+    }
+
+    .navbar-nav .nav-link:hover i {
+      color: var(--secondary);
+    }
+
+    .navbar-nav .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 3px;
+      background: var(--gradient);
+      transition: width 0.3s;
+      border-radius: 2px;
+    }
+
+    .navbar-nav .nav-link:hover::after {
+      width: 80%;
+    }
+
+    .nav-icon {
+      color: var(--primary);
+    }
+
+    /* Badge styles */
+    .cart-badge, .wish-badge {
+      background: var(--secondary);
+      color: var(--dark);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-size: 0.7rem;
+      margin-left: 3px;
+      font-weight: 600;
+      border: 2px solid white;
+    }
+    .wish-badge { 
+      background: var(--primary); 
+      color: white;
+    }
+
+    .login-btn {
+      background: transparent;
+      border: 2px solid var(--primary);
+      border-radius: 30px;
+      padding: 6px 18px;
+      font-weight: 600;
+      color: var(--primary) !important;
+      transition: all 0.3s;
+    }
+    .login-btn:hover {
+      background: var(--gradient);
+      border-color: transparent;
+      color: white !important;
+    }
+    .login-btn i {
+      color: var(--primary);
+    }
+    .login-btn:hover i {
+      color: white;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      background: linear-gradient(135deg, rgba(155, 107, 155, 0.9) 0%, rgba(232, 180, 180, 0.9) 100%), url('beauty-salon.jpg') center/cover no-repeat;
+      height: 70vh;
+      min-height: 500px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 8vw, 4.5rem);
+      font-weight: 800;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      font-weight: 400;
+    }
+
+    /* ABOUT SECTION */
+    .wix-collection-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 30px;
+      background: white;
+      border-radius: 30px;
+      box-shadow: 0 20px 40px rgba(155, 107, 155, 0.1);
+    }
+
+    .images-wrapper {
+      position: relative;
+      width: 40%;
+      min-width: 250px;
+      height: 350px;
+    }
+    
+    .tablet {
+      position: absolute;
+      border-radius: 20px;
+      box-shadow: 0 20px 30px rgba(0,0,0,0.15);
+      width: 220px;
+      max-width: 100%;
+      object-fit: cover;
+      border: 5px solid white;
+    }
+    
+    .tablet1 { 
+      top: 0; 
+      left: 0; 
+      z-index: 2; 
+      height: 220px; 
+      width: 200px;
+    }
+    
+    .tablet2 { 
+      bottom: 0; 
+      right: 0; 
+      width: 200px; 
+      opacity: 1; 
+      z-index: 1; 
+      height: 200px; 
+    }
+
+    .text-content { 
+      width: 55%; 
+    }
+    
+    .subtitle { 
+      font-size: 1.1rem; 
+      font-style: italic; 
+      color: var(--primary);
+      font-weight: 500;
+    }
+    
+    .title { 
+      font-size: clamp(2rem, 5vw, 3.5rem); 
+      line-height: 1.1; 
+      font-weight: 800;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .description {
+      color: var(--dark);
+      line-height: 1.8;
+    }
+    
+    .btn-dark { 
+      background: var(--gradient); 
+      border: none;
+      color: white;
+      padding: 12px 30px;
+      font-weight: 600;
+      transition: transform 0.3s;
+    }
+    
+    .btn-dark:hover { 
+      background: linear-gradient(135deg, #8a5a8a 0%, #d4a0a0 100%);
+      transform: translateY(-2px);
+    }
+
+    /* SERVICES SECTION */
+    #services {
+      background: linear-gradient(135deg, #fcf9f7 0%, #fff 100%);
+      padding: 60px 0;
+    }
+
+    #services h2 {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      margin-bottom: 15px;
+    }
+
+    .card {
+      border: none;
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.3s;
+      background: white;
+      box-shadow: 0 10px 30px rgba(155, 107, 155, 0.1);
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(155, 107, 155, 0.2);
+    }
+
+    .card-img-top {
+      height: 220px;
+      object-fit: cover;
+      cursor: pointer;
+      transition: transform 0.5s;
+    }
+
+    .card:hover .card-img-top {
+      transform: scale(1.05);
+    }
+
+    .card-body {
+      background: linear-gradient(135deg, #fff 0%, #fcf9f7 100%);
+      padding: 20px;
+    }
+
+    .card-body h5 {
+      color: var(--primary);
+      font-weight: 700;
+      margin: 0;
+    }
+
+    /* MODAL STYLES */
+    .modal-content {
+      border-radius: 30px;
+      border: none;
+      box-shadow: 0 30px 60px rgba(155, 107, 155, 0.3);
+    }
+
+    .modal-header {
+      background: var(--gradient);
+      color: white;
+      border-radius: 30px 30px 0 0;
+      border: none;
+      padding: 20px 30px;
+    }
+
+    .modal-header .btn-close {
+      background-color: white;
+      opacity: 0.8;
+    }
+
+    .modal-title {
+      font-weight: 700;
+    }
+
+    .service-item {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding: 15px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: transform 0.3s;
+    }
+
+    .service-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(155, 107, 155, 0.15);
+    }
+
+    .service-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 10px;
+    }
+
+    .service-item h6 { 
+      color: var(--primary);
+      font-weight: 700; 
+    }
+    
+    .service-item .price { 
+      font-weight: bold; 
+      color: var(--secondary);
+      font-size: 1.2rem;
+    }
+
+    .btn-add-cart, .btn-wish {
+      border: none;
+      padding: 8px 15px;
+      font-size: 0.85rem;
+      border-radius: 50px;
+      margin: 5px 3px;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+    
+    .btn-add-cart {
+      background: var(--gradient);
+      color: white;
+    }
+    
+    .btn-add-cart:hover { 
+      background: linear-gradient(135deg, #8a5a8a 0%, #d4a0a0 100%);
+      transform: scale(1.05);
+    }
+    
+    .btn-wish {
+      background: #ffe6e6;
+      color: var(--primary);
+      border: 1px solid var(--primary-light);
+    }
+    
+    .btn-wish:hover { 
+      background: var(--primary-light);
+      color: white;
+    }
+
+    /* CONTACT SECTION */
+    #contact {
+      background: white;
+      padding: 60px 0;
+    }
+
+    .contact-box {
+      background: linear-gradient(135deg, #fff 0%, #fcf9f7 100%);
+      border-radius: 30px;
+      padding: 40px !important;
+      box-shadow: 0 20px 40px rgba(155, 107, 155, 0.1);
+      border: 1px solid rgba(155, 107, 155, 0.1);
+      height: 100%;
+    }
+
+    .contact-box h4 {
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .form-control {
+      border: 2px solid #f0e6f0;
+      border-radius: 15px;
+      padding: 12px 20px;
+      transition: all 0.3s;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(155, 107, 155, 0.25);
+    }
+
+    .btn-submit {
+      background: var(--gradient);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(155, 107, 155, 0.3);
+    }
+
+    /* FOOTER */
+    .footer {
+      background: var(--dark);
+      color: white;
+      padding: 60px 0 20px;
+      margin-top: 0;
+    }
+
+    .footer h5, .footer h6 {
+      color: var(--primary-light);
+      font-weight: 700;
+    }
+
+    .footer a {
+      color: #ddd;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer a:hover {
+      color: var(--secondary);
+    }
+
+    .footer i {
+      color: var(--primary-light);
+      margin-right: 8px;
+    }
+
+    .social-links a {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      text-align: center;
+      line-height: 40px;
+      margin-right: 8px;
+      transition: all 0.3s;
+    }
+
+    .social-links a:hover {
+      background: var(--gradient);
+      transform: translateY(-3px);
+    }
+
+    .social-links i {
+      margin-right: 0;
+      color: white;
+    }
+
+    /* MOBILE RESPONSIVE STYLES */
+    @media (max-width: 991px) {
+      .navbar-collapse {
+        background: white;
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-top: 15px;
+      }
+
+      .navbar-nav .nav-link {
+        padding: 12px 20px !important;
+        border-bottom: 1px solid #f0e6f0;
+      }
+
+      .navbar-nav .nav-link:last-child {
+        border-bottom: none;
+      }
+
+      .navbar-nav .nav-link::after {
+        display: none;
+      }
+
+      .hero {
+        height: 50vh;
+        min-height: 400px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-top: 60px;
+      }
+
+      .wix-collection-container {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+        margin: 15px;
+      }
+
+      .images-wrapper {
+        width: 100%;
+        height: 280px;
+        margin-bottom: 20px;
+      }
+
+      .tablet {
+        width: 180px;
+      }
+
+      .tablet1 {
+        width: 160px;
+        height: 180px;
+      }
+
+      .tablet2 {
+        width: 160px;
+        height: 160px;
+        right: 0;
+      }
+
+      .text-content {
+        width: 100%;
+      }
+
+      .title {
+        font-size: 2.2rem;
+      }
+
+      .btn-dark {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .card {
+        margin: 0 15px;
+      }
+
+      .contact-box {
+        padding: 30px 20px !important;
+        margin: 0 15px;
+      }
+
+      .modal-dialog {
+        margin: 10px;
+      }
+
+      .service-item {
+        padding: 10px;
+      }
+
+      .service-item img {
+        height: 120px;
+      }
+
+      .btn-add-cart, .btn-wish {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .images-wrapper {
+        height: 220px;
+      }
+
+      .tablet {
+        width: 140px;
+      }
+
+      .tablet1 {
+        width: 130px;
+        height: 150px;
+      }
+
+      .tablet2 {
+        width: 130px;
+        height: 130px;
+      }
+
+      .title {
+        font-size: 1.8rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+
+      .description {
+        font-size: 0.95rem;
+      }
+
+      .footer {
+        text-align: center;
+      }
+
+      .social-links {
+        justify-content: center;
+        display: flex;
+      }
+
+      .col-md-2, .col-md-3, .col-md-4 {
+        margin-bottom: 30px;
+      }
+    }
+
+    /* Fix for very small devices */
+    @media (max-width: 360px) {
+      .navbar-brand {
+        font-size: 1.1rem;
+      }
+
+      .login-btn {
+        padding: 4px 12px;
+        font-size: 0.9rem;
+      }
+
+      .images-wrapper {
+        height: 180px;
+      }
+
+      .tablet {
+        width: 120px;
+      }
+
+      .tablet1, .tablet2 {
+        width: 110px;
+        height: 120px;
+      }
+    }
+
+    /* Touch-friendly improvements */
+    button, .nav-link, .card {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:active, .nav-link:active {
+      opacity: 0.7;
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Container padding for mobile */
+    .container, .container-fluid {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    /* Modal mobile improvements */
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-body .row {
+      margin: 0;
+    }
+
+    /* Gallery grid for mobile */
+    .row.g-4 {
+      --bs-gutter-y: 1.5rem;
+    }
+  </style>
+</head>
+
+<!-- Navbar with new colors -->
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">
+      <i class="fas fa-spa me-2"></i>Glow Beauty
+    </a>
+
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#home">
+            <i class="fas fa-home"></i>HOME
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#about">
+            <i class="fas fa-info-circle"></i>ABOUT
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#services">
+            <i class="fas fa-cut"></i>SERVICES
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#contact">
+            <i class="fas fa-envelope"></i>CONTACT
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="d-flex align-items-center">
+      <a href="wishlist.html?wishCount=0" class="nav-link position-relative me-3" id="wishlistLink">
+        <i class="fa-solid fa-heart nav-icon"></i>
+        <span class="wish-badge" id="wishlistCount">0</span>
+      </a>
+
+      <a href="cart.html?cartCount=0" class="nav-link position-relative me-3" id="cartLink">
+        <i class="fa-solid fa-cart-shopping nav-icon"></i>
+        <span class="cart-badge" id="cartCount">0</span>
+      </a>
+
+      <a href="login.html" class="login-btn text-decoration-none">
+        <i class="fa-regular fa-user"></i> LOGIN
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero" id="home">
+  <div class="container">
+    <h1 class="mb-3">Hair & Skin Care</h1>
+    <p class="lead">Best Salon in City</p>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-5">
+  <div class="wix-collection-container">
+    <div class="images-wrapper">
+      <img src="hair cut4.jpg" alt="Service 1" class="tablet tablet2">
+      <img src="skin care2.jpg" alt="Service 2" class="tablet tablet1">
+    </div>
+    <div class="text-content">
+      <p class="subtitle">✨ Stylish & Strategic</p>
+      <h1 class="title">Glow Beauty<br>Parlour</h1>
+      <p class="description">At Mirrors, we believe every woman deserves to feel confident, radiant, and empowered. Our team of skilled professionals provides a wide range of services including skincare, hair styling, bridal makeup, facials, and more — all delivered with precision and passion.</p>
+      <button class="btn btn-dark">Discover More</button>
+    </div>
+  </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-5">
+  <div class="container">
+    <h2 class="text-center mb-4">OUR SERVICES</h2>
+    <p class="text-center text-muted mb-5">Click on image to see details – add to cart or wishlist</p>
+    <div class="row g-4">
+      <!-- HAIR card -->
+      <div class="col-md-4">
+        <div class="card">
+          <img src="hair img.jpg" class="card-img-top" alt="Hair" data-bs-toggle="modal" data-bs-target="#hairModal">
+          <div class="card-body text-center">
+            <h5>HAIR STYLE</h5>
+          </div>
+        </div>
+      </div>
+      <!-- SKIN card -->
+      <div class="col-md-4">
+        <div class="card">
+          <img src="skin care4.jpg" class="card-img-top" alt="Skin" data-bs-toggle="modal" data-bs-target="#skinModal">
+          <div class="card-body text-center">
+            <h5>SKIN CARE</h5>
+          </div>
+        </div>
+      </div>
+      <!-- BRIDAL card -->
+      <div class="col-md-4">
+        <div class="card">
+          <img src="bridalmakeup.jpg" class="card-img-top" alt="Bridal" data-bs-toggle="modal" data-bs-target="#bridalModal">
+          <div class="card-body text-center">
+            <h5>BRIDAL</h5>
+          </div>
+        </div>
+      </div>
+      <!-- NAIL card -->
+      <div class="col-md-4">
+        <div class="card">
+          <img src="NAIL CARE1.jpg" class="card-img-top" alt="Nail" data-bs-toggle="modal" data-bs-target="#nailModal">
+          <div class="card-body text-center">
+            <h5>NAIL CARE</h5>
+          </div>
+        </div>
+      </div>
+      <!-- BODY card -->
+      <div class="col-md-4">
+        <div class="card">
+          <img src="BODY CARE.jpg" class="card-img-top" alt="Body" data-bs-toggle="modal" data-bs-target="#bodyModal">
+          <div class="card-body text-center">
+            <h5>BODY CARE</h5>
+          </div>
+        </div>
+      </div>
+      <!-- SPECIAL card -->
+      <div class="col-md-4">
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&auto=format" class="card-img-top" alt="Special" data-bs-toggle="modal" data-bs-target="#specialModal">
+          <div class="card-body text-center">
+            <h5>SPECIAL</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HAIR MODAL -->
+<div class="modal fade" id="hairModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">HAIR SERVICES</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-6 col-md-4 service-item">
+            <img src="LAYER CUT1.jpg" class="img-fluid">
+            <h6>LAYER CUT</h6>
+            <span class="price">₹800</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Layer Cut',800,'LAYER CUT1.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Layer Cut',800,'LAYER CUT1.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="BOB CUT.jpg" class="img-fluid">
+            <h6>BOB CUT</h6>
+            <span class="price">₹900</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Bob Cut',900,'BOB CUT.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Bob Cut',900,'BOB CUT.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="STRAIGHTRNING.jpg" class="img-fluid">
+            <h6>STRAIGHTENING</h6>
+            <span class="price">₹3500</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Straightening',3500,'STRAIGHTRNING.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Straightening',3500,'STRAIGHTRNING.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Curling.jpg" class="img-fluid">
+            <h6>CURLING</h6>
+            <span class="price">₹1500</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Curling',1500,'Curling.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Curling',1500,'Curling.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Hair Coloring.jpg" class="img-fluid">
+            <h6>HAIR COLOR</h6>
+            <span class="price">₹2500</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Hair Color',2500,'Hair Coloring.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Hair Color',2500,'Hair Coloring.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="HAIR SPA2.jpg" class="img-fluid">
+            <h6>HAIR SPA</h6>
+            <span class="price">₹1200</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Hair Spa',1200,'HAIR SPA2.jpg')"><i class="fa-solid fa-cart-shopping"></i>Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Hair Spa',1200,'HAIR SPA2.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SKIN MODAL -->
+<div class="modal fade" id="skinModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">SKIN CARE</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-6 col-md-4 service-item">
+            <img src="Fruit Facial.jpg" class="img-fluid">
+            <h6>FRUIT FACIAL</h6>
+            <span class="price">₹1000</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Fruit Facial',1000,'Fruit Facial.jpg')"><i class="fa-solid fa-cart-shopping"></i>Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Fruit Facial',1000,'Fruit Facial.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Gold Facial.jpg" class="img-fluid">
+            <h6>GOLD FACIAL</h6>
+            <span class="price">₹1800</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Gold Facial',1800,'Gold Facial.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Gold Facial',1800,'Gold Facial.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Anti-Aging Treatment.jpg" class="img-fluid">
+            <h6>ANTI-AGING</h6>
+            <span class="price">₹2500</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Anti-Aging',2500,'Anti-Aging Treatment.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Anti-Aging',2500,'Anti-Aging Treatment.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Acne Treatment.jpg" class="img-fluid">
+            <h6>ACNE CARE</h6>
+            <span class="price">₹1500</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Acne Care',1500,'Acne Treatment.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Acne Care',1500,'Acne Treatment.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Detan Pack.jpg" class="img-fluid">
+            <h6>DETAN PACK</h6>
+            <span class="price">₹1200</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Detan Pack',1200,'Detan Pack.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Detan Pack',1200,'Detan Pack.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Hydra Facial.jpg" class="img-fluid">
+            <h6>HYDRA FACIAL</h6>
+            <span class="price">₹3000</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Hydra Facial',3000,'Hydra Facial.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Hydra Facial',3000,'Hydra Facial.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BRIDAL MODAL -->
+<div class="modal fade" id="bridalModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">BRIDAL</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-6 col-md-4 service-item">
+            <img src="bridel.jpg" class="img-fluid">
+            <h6>HD BRIDAL</h6>
+            <span class="price">₹1000</span><br>
+            <button class="btn-add-cart" onclick="addToCart('HD Bridal',1000,'bridel.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('HD Bridal',1000,'bridel.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Traditional Bridal.jpg" class="img-fluid">
+            <h6>TRADITIONAL</h6>
+            <span class="price">₹1800</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Traditional Bridal',1800,'Traditional Bridal.jpg')"><i class="fa-solid fa-cart-shopping"></i>Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Traditional Bridal',1800,'Traditional Bridal.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Waterproof Makeup.jpg" class="img-fluid">
+            <h6>WATERPROOF</h6>
+            <span class="price">₹2500</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Waterproof Bridal',2500,'Waterproof Makeup.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Waterproof Bridal',2500,'Waterproof Makeup.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="hd bridal image.jpg" class="img-fluid">
+            <h6>ENGAGEMENT</h6>
+            <span class="price">₹1500</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Engagement Makeup',1500,'hd bridal image.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Engagement Makeup',1500,'hd bridal image.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="bridal makup.jpg" class="img-fluid">
+            <h6>RECEPTION</h6>
+            <span class="price">₹1200</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Reception Makeup',1200,'bridal makup.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Reception Makeup',1200,'bridal makup.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Airbrush Bridal Makeup.jpg" class="img-fluid">
+            <h6>AIRBRUSH</h6>
+            <span class="price">₹3000</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Airbrush Bridal',3000,'Airbrush Bridal Makeup.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Airbrush Bridal',3000,'Airbrush Bridal Makeup.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAIL MODAL -->
+<div class="modal fade" id="nailModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">NAIL CARE</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-6 col-md-4 service-item">
+            <img src="NAIL CARE.jpg" class="img-fluid">
+            <h6>MANICURE</h6>
+            <span class="price">₹800</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Manicure',800,'NAIL CARE.jpg')"><i class="fa-solid fa-cart-shopping"></i>Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Manicure',800,'NAIL CARE.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="polish-change.png" class="img-fluid">
+            <h6>PEDICURE</h6>
+            <span class="price">₹1000</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Pedicure',1000,'polish-change.png')"><i class="fa-solid fa-cart-shopping"></i>Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Pedicure',1000,'polish-change.png')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="NAIL CARE1.jpg" class="img-fluid">
+            <h6>NAIL ART</h6>
+            <span class="price">₹1200</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Nail Art',1200,'NAIL CARE1.jpg')"><i class="fa-solid fa-cart-shopping"></i>book
+            <button class="btn-wish" onclick="addToWishlist('Nail Art',1200,'NAIL CARE1.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BODY MODAL -->
+<div class="modal fade" id="bodyModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">BODY CARE</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-6 col-md-4 service-item">
+            <img src="Swedish Massage.jpg" class="img-fluid">
+            <h6>BODY POLISH</h6>
+            <span class="price">₹1500</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Body Polish',1500,'Swedish Massage.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Body Polish',1500,'Swedish Massage.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Relaxation Body Massage.jpg" class="img-fluid">
+            <h6>BODY WRAP</h6>
+            <span class="price">₹2000</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Body Wrap',2000,'Relaxation Body Massage.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Body Wrap',2000,'Relaxation Body Massage.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Full Body Spa.jpg" class="img-fluid">
+            <h6>MASSAGE</h6>
+            <span class="price">₹1800</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Massage',1800,'Full Body Spa.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Massage',1800,'Full Body Spa.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SPECIAL MODAL -->
+<div class="modal fade" id="specialModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">SPECIAL SERVICES</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-6 col-md-4 service-item">
+            <img src="Fruit Facial1.jpg" class="img-fluid">
+            <h6>FRUIT FACIAL</h6>
+            <span class="price">₹1000</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Special Fruit Facial',1000,'Fruit Facial1.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Special Fruit Facial',1000,'Fruit Facial1.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Gold Facial2.jpg" class="img-fluid">
+            <h6>GOLD FACIAL</h6>
+            <span class="price">₹1800</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Special Gold Facial',1800,'Gold Facial2.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Special Gold Facial',1800,'Gold Facial2.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+          <div class="col-6 col-md-4 service-item">
+            <img src="Anti-Aging3.jpg" class="img-fluid">
+            <h6>ANTI-AGING</h6>
+            <span class="price">₹2500</span><br>
+            <button class="btn-add-cart" onclick="addToCart('Special Anti-Aging',2500,'Anti-Aging3.jpg')"><i class="fa-solid fa-cart-shopping"></i> Book</button>
+            <button class="btn-wish" onclick="addToWishlist('Special Anti-Aging',2500,'Anti-Aging3.jpg')"><i class="fa-regular fa-heart"></i> Wish</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT SECTION -->
+<section class="py-5" id="contact">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold" style="background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CONTACT US</h2>
+      <p class="text-muted">Book Your Appointment Today</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="contact-box">
+          <h4>Send Message</h4>
+          <form>
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="Full Name">
+            </div>
+            <div class="mb-3">
+              <input type="email" class="form-control" placeholder="Email Address">
+            </div>
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="Phone Number">
+            </div>
+            <div class="mb-3">
+              <textarea class="form-control" rows="4" placeholder="Your Message"></textarea>
+            </div>
+            <button type="submit" class="btn btn-dark w-100">Send Message</button>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="contact-box">
+          <h4>Contact Information</h4>
+          <p><i class="fas fa-map-marker-alt text-primary me-2"></i><strong>Address:</strong><br>Glow Beauty Parlour, Main Road, Kochi, Kerala</p>
+          <p><i class="fas fa-phone text-primary me-2"></i><strong>Phone:</strong> +91 93245 61236</p>
+          <p><i class="fas fa-envelope text-primary me-2"></i><strong>Email:</strong> glowbeauty@gmail.com</p>
+          <p><i class="fas fa-clock text-primary me-2"></i><strong>Hours:</strong> Mon–Sat 9am–10pm, Sun Closed</p>
+          <div class="mt-4">
+            <iframe src="https://www.google.com/maps?q=Kochi,Kerala&output=embed" width="100%" height="200" style="border:0; border-radius:15px;" allowfullscreen="" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="row gy-4">
+      <div class="col-md-4">
+        <h5 class="mb-3">Glow Beauty Parlour</h5>
+        <p class="small opacity-75">Bringing out your inner glow with professional care and love.</p>
+      </div>
+      <div class="col-md-2">
+        <h6 class="mb-3">Links</h6>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a href="#home"><i class="fas fa-chevron-right fa-sm me-2"></i>Home</a></li>
+          <li class="mb-2"><a href="#about"><i class="fas fa-chevron-right fa-sm me-2"></i>About</a></li>
+          <li class="mb-2"><a href="#services"><i class="fas fa-chevron-right fa-sm me-2"></i>Services</a></li>
+          <li class="mb-2"><a href="#contact"><i class="fas fa-chevron-right fa-sm me-2"></i>Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h6 class="mb-3">Contact</h6>
+        <p class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> Kochi, Kerala</p>
+        <p class="mb-2"><i class="fas fa-phone me-2"></i> +91 93245 61236</p>
+        <p class="mb-2"><i class="fas fa-envelope me-2"></i> glowbeauty@gmail.com</p>
+      </div>
+      <div class="col-md-3">
+        <h6 class="mb-3">Follow us</h6>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <hr class="bg-light mt-4">
+        <p class="small mb-0 opacity-75">© 2025 Glow Beauty. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Data layer for wishlist & cart
+  let cartItems = JSON.parse(localStorage.getItem('glowCart')) || [];
+  let wishItems = JSON.parse(localStorage.getItem('glowWish')) || [];
+
+  let cartCount = cartItems.length;
+  let wishCount = wishItems.length;
+
+  const cartSpan = document.getElementById('cartCount');
+  const wishSpan = document.getElementById('wishlistCount');
+  const cartLink = document.getElementById('cartLink');
+  const wishLink = document.getElementById('wishlistLink');
+
+  function saveToStorage() {
+    localStorage.setItem('glowCart', JSON.stringify(cartItems));
+    localStorage.setItem('glowWish', JSON.stringify(wishItems));
+  }
+
+  function updateNavLinks() {
+    cartLink.href = `cart.html?cartCount=${cartCount}`;
+    wishLink.href = `wishlist.html?wishCount=${wishCount}`;
+    cartSpan.innerText = cartCount;
+    wishSpan.innerText = wishCount;
+  }
+
+  function addToCart(name, price, image) {
+    const id = 'cart_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    cartItems.push({ 
+      id: id,
+      name: name, 
+      price: price,
+      image: image || getDefaultImage(name),
+      addedAt: new Date().toISOString() 
+    });
+    cartCount = cartItems.length;
+    saveToStorage();
+    updateNavLinks();
+    alert(`✅ ${name} added to cart (total items: ${cartCount})`);
+  }
+
+  function addToWishlist(name, price, image) {
+    const id = "wish_" + Date.now() + "_" + Math.random().toString(36).substr(2,5);
+    wishItems.push({
+      id: id,
+      name: name,
+      price: price,
+      image: image || getDefaultImage(name),
+      addedAt: new Date().toISOString()
+    });
+    wishCount = wishItems.length;<i class="fa-solid fa-cart-shopping"></i><i class="fa-solid fa-cart-shopping"></i>
+    saveToStorage();
+    updateNavLinks();
+    alert(`❤️ ${name} added to wishlist (total: ${wishCount})`);
+  }
+
+  function getDefaultImage(name) {
+    const imageMap = {
+      'Layer Cut': 'LAYER CUT1.jpg',
+      'Bob Cut': 'BOB CUT.jpg',
+      'Straightening': 'STRAIGHTRNING.jpg',
+      'Curling': 'Curling.jpg',
+      'Hair Color': 'Hair Coloring.jpg',
+      'Hair Spa': 'HAIR SPA2.jpg',
+      'Fruit Facial': 'Fruit Facial.jpg',
+      'Gold Facial': 'Gold Facial.jpg',
+      'Anti-Aging': 'Anti-Aging Treatment.jpg',
+      'Acne Care': 'Acne Treatment.jpg',
+      'Detan Pack': 'Detan Pack.jpg',
+      'Hydra Facial': 'Hydra Facial.jpg',
+      'HD Bridal': 'bridel.jpg',
+      'Traditional Bridal': 'Traditional Bridal.jpg',
+      'Waterproof Bridal': 'Waterproof Makeup.jpg',
+      'Engagement Makeup': 'hd bridal image.jpg',
+      'Reception Makeup': 'bridal makup.jpg',
+      'Airbrush Bridal': 'Airbrush Bridal Makeup.jpg',
+      'Manicure': 'NAIL CARE.jpg',
+      'Pedicure': 'polish-change.png',
+      'Nail Art': 'NAIL CARE1.jpg',
+      'Body Polish': 'Swedish Massage.jpg',
+      'Body Wrap': 'Relaxation Body Massage.jpg',
+      'Massage': 'Full Body Spa.jpg',
+      'Special Fruit Facial': 'Fruit Facial1.jpg',
+      'Special Gold Facial': 'Gold Facial2.jpg',
+      'Special Anti-Aging': 'Anti-Aging3.jpg'
+    };
+    return imageMap[name] || 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=200&h=150&fit=crop';
+  }
+
+  // Initialize
+  updateNavLinks();
+</script>
+</body>
+</html>
